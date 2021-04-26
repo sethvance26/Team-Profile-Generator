@@ -171,4 +171,5 @@ You are required to submit the following for review:
 * The URL of the GitHub repository, with a unique name and a readme describing the project.
 
 ---
+https://sethvance26.github.io/Team-Profile-Generator/
 © 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
