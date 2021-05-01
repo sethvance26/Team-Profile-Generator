@@ -10,12 +10,15 @@ const Intern = require("../Team-Profile-Generator/lib/Intern");
 const Engineer = require("../Team-Profile-Generator/lib/Engineer");
 const Manager = require("../Team-Profile-Generator/lib/Manager");
 
+//This is where we have a new object with our team members stored.
 const teamMembers = [];
 
+
+//These are the questions for the specfic role once it's chosen.
 const engineerQuestion = [
   {
     type: "input",
-    name: "engineerGithub",
+    name: "github",
     message: "What is your github username?",
   },
 ];
@@ -35,7 +38,8 @@ const managerQuestion = [
     message: "Enter Office Number for Manager",
   },
 ];
-
+//Below this we have our base prompt questions. These are asked first.
+//The specific questions above are placed due to scope. 
 const questions = () => {
   return inquirer
     .prompt([
@@ -61,7 +65,7 @@ const questions = () => {
         message: "What is their e-mail address?",
       },
     ])
-
+//These below are creating new instantances of constructor classes. 
     .then((data) => {
       if (data.role === "Manager") {
         return inquirer
@@ -77,50 +81,77 @@ const questions = () => {
             teamMembers.push(ManagerGuy);
           });
       }
-      if (data.role === "Manager") {
+//If role is = Intern, then prompt for Intern questions.
+      if (data.role === "Intern") {
         return inquirer
-          .prompt(managerQuestion)
+          .prompt(internQuestion)
 
           .then((data2) => {
-            const ManagerGuy = new Manager(
+            const InternGuy = new Intern(
               data.name,
               data.email,
               data.id,
-              data2.officeNum
+              data2.internSchool
             );
-            teamMembers.push(ManagerGuy);
+            teamMembers.push(InternGuy);
           });
       }
-      if (data.role === "Manager") {
+//If role is = Engineer, then prompt for Engineer questions. 
+      if (data.role === "Engineer") {
         return inquirer
-          .prompt(managerQuestion)
+          .prompt(engineerQuestion)
 
           .then((data2) => {
-            const ManagerGuy = new Manager(
+            const EngineerGuy = new Engineer(
               data.name,
               data.email,
               data.id,
-              data2.officeNum
+              data2.github
             );
-            teamMembers.push(ManagerGuy);
+            teamMembers.push(EngineerGuy);
           });
       }
-      if (data.role === "Manager") {
-        return inquirer
-          .prompt(managerQuestion)
+          });
+      }
+    
+ //This is where the questions functions ends.
 
-          .then((data2) => {
-            const ManagerGuy = new Manager(
-              data.name,
-              data.email,
-              data.id,
-              data2.officeNum
-            );
-            teamMembers.push(ManagerGuy);
-          });
-      }
-    });
-}; //This is where the questions functions ends.
+
+let newTeamObj = (teamMembers)
+
+for(let i = 0; i < newTeamObj.length; i++){
+  let finalPrompt = newTeamObj[i].officeNum || newTeamObj[i].github || newTeamObj[i].internSchool;
+  let keys = Object.keys(newTeamObj[i]);
+  let lastKey = keys[4];
+  let finalOption = lastKey + ":" + finalPrompt
+
+  if (lastKey === undefined){
+      finalOption = "";
+
+  } else if (lastKey === 'github'){
+      finalOption = (`GitHub : <a href = 'https://www.github.com/${newTeamObj[i].github}'> ${newTeamObj[i].github}</a>`)
+      console.log(finalOption)
+  }
+  else{
+      console.log(finalOption)
+  }
+
+
+ let newCard = ""
+
+ let {name, id, email, role} = newTeamObj[i]
+newCard+=`  
+<div class="employee">
+<section class="card">
+  <header>${role}</header>
+  <h2>${name}</h2>
+  <h3>${id}</h3>
+  <img src="./assets/images/camera.jpg" alt="black camera" />
+  <p>${email}</p>
+</section>
+</div>`
+
+
 
 const Markup = (data) =>
   `<!DOCTYPE html>
@@ -133,57 +164,42 @@ const Markup = (data) =>
     <title>Document</title>
   </head>
   <body>
-
-  <div class="employee">
-    <section class="card">
-      <header>${data.role}</header>
-      <h2>${data.name}</h2>
-      <h3>${data.id}</h3>
-      <img src="./assets/images/camera.jpg" alt="black camera" />
-      <p>${data.email}</p>
-    </section>
-
-    <section class="card">
-    <header>${data.role}</header>
-    <h2>${data.name}</h2>
-    <h3>${data.id}</h3>
-    <img src="./assets/images/camera.jpg" alt="black camera" />
-    <p>${data.email}</p>
-    </section>
-
-    <section class="card">
-    <header>${data.role}</header>
-    <h2>${data.name}</h2>
-    <h3>${data.id}</h3>
-    <img src="./assets/images/camera.jpg" alt="black camera" />
-    <p>${data.email}</p>
-    </section>
-
-    <section class="card">
-    <header>${data.role}</header>
-    <h2>${data.name}</h2>
-    <h3>${data.id}</h3>
-    <img src="./assets/images/camera.jpg" alt="black camera" />
-    <p>${data.email}</p>
-    </section>
-  </div>
+<main>
+${newCard}
 </main>
 
   </body>
-  </html>`;
+  </html>`
 
 // Function to write README file
 const writeToFile = (data) => {
   fs.writeFile("./dist/index.html", Markup(data), (error) =>
     error ? console.log("Error!") : console.log("Success!")
   );
-};
+
+
+const additionalMem = () => {
+  inquirer.prompt([
+    {
+      type:'confirm',
+      name: 'addMore',
+      message: 'Would you like to add another employee?',
+    }
+  ])
+  if (response.addMore === true){
+    questions(teamMembers);
+  } else {
+    console.log('team', teamMembers)
+    let newCard = (teamMembers)
+  }
+}
 
 // Function to initialize app
 const init = () => {
   questions()
     .then((data) => {
       console.log(teamMembers);
+      additionalMem()
       writeToFile("./dist/index.html", Markup(data));
     })
     .then(() => console.log("Successfully wrote an index.html"))
