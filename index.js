@@ -11,7 +11,34 @@ const Intern = require('../Team-Profile-Generator/lib/Intern');
 const Engineer = require('../Team-Profile-Generator/lib/Engineer');
 const Manager = require('../Team-Profile-Generator/lib/Manager');
 
-const questions = [
+
+
+const teamMembers = [];
+
+const engineerQuestion = [
+  {
+    type: 'input',
+    name: 'engineerGithub',
+    message:'What is your github username?',
+  }];
+  
+  const internQuestion = [
+  {
+    type: 'input',
+    name: 'internSchool',
+    message: 'Please enter intern school name',
+  }];
+
+  const managerQuestion = [
+    {
+      type: 'input',
+      name: 'officeNum',
+      message: 'Enter Office Number for Manager',
+    }];
+
+
+const questions = () => {
+return inquirer.prompt([
     {
         type: 'list',
         name: 'role',
@@ -34,96 +61,100 @@ const questions = [
         message: 'What is their e-mail address?',
     },
 
-];
+])
 
-const Markup = (data) =>
+
+.then(data => {
+    if (data.role === 'Manager') {
+      return inquirer.prompt(managerQuestion)
+    
+.then(data2 => {
+  
+  const ManagerGuy = new Manager (data.name, data.email, data.id, data2.officeNum,  )
+  teamMembers.push(ManagerGuy);
+
+});
+    
+}})
+
+
+}; //This is where the questions functions ends.
+
+
+
+
+
+
+
+    
+const Markup = (data) => 
   `<!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css%22%3E
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css%22%3E">
+    <link rel="stylesheet" type="text/css" href="./style.css" />
     <title>Document</title>
   </head>
   <body>
-      <header style="background-color:red; color: white; text-align: center; font-size: large;">My Team</header>
 
-  <div class="card" style="width: 18rem;">
-    <div class="container">
-      <div style="background-color:rgb(66, 57, 240); color: white;">
-          <h4 class="display-6">${data.name}</h4>
-          <h4>${data.role}.</h4>
-      </div> 
-      <ul class="list-group">
-        <li class="list-group-item">ID: ${data.id}</li>
-        <li class="list-group-item">Email: ${data.email}</li>
+  <div class="employee">
+    <section class="card">
+      <header>${data.role}</header>
+      <h2>${data.name}</h2>
+      <h3>${data.id}</h3>
+      <img src="./assets/images/camera.jpg" alt="black camera" />
+      <p>${data.email}</p>
+    </section>
 
-      </ul>
-    </div>
+    <section class="card">
+    <header>${data.role}</header>
+    <h2>${data.name}</h2>
+    <h3>${data.id}</h3>
+    <img src="./assets/images/camera.jpg" alt="black camera" />
+    <p>${data.email}</p>
+    </section>
+
+    <section class="card">
+    <header>${data.role}</header>
+    <h2>${data.name}</h2>
+    <h3>${data.id}</h3>
+    <img src="./assets/images/camera.jpg" alt="black camera" />
+    <p>${data.email}</p>
+    </section>
+
+    <section class="card">
+    <header>${data.role}</header>
+    <h2>${data.name}</h2>
+    <h3>${data.id}</h3>
+    <img src="./assets/images/camera.jpg" alt="black camera" />
+    <p>${data.email}</p>
+    </section>
   </div>
+</main>
 
   </body>
-  </html>`
+  </html>`;
 
 
-
-const userPrompt = () => {
-    return inquirer.prompt(questions)
-  }
   
-  
-  
-  
-  //This function writes a new README.md file and displays "Sucessful!" if it worked correctly, and "Error" if there was an issue. 
-  const writeHtml = (data) => {
-    fs.writeFile('teamPage.html', data, (error) =>
-    error ? console.log('Error!') : console.log('Successful!'));
-  }
-  
-  
-  
-  
-  
-  
-  //This function initializes our application and tells the userPrompt function to run first, then takes that data generates a markdown, and writes the README with that information. 
-  const init = () => {
-  userPrompt()
-    .then((data) => {
-     writeHtml(data)
-      Markup(data)
-    
-    });
-  }
-  
-  
-  
-  
-  // Function call to initialize app
-  init();
+ // Function to write README file
+const writeToFile = (data) => {
+  fs.writeFile('./dist/index.html', Markup(data), (error) =>
+  error ? console.log('Error!') : console.log('Success!'));
+}
 
 
+// Function to initialize app
+const init = () => {
+  questions()
+    .then((data) => { 
+      console.log(teamMembers)
+      writeToFile('./dist/index.html', Markup(data))})  
+    .then(() => console.log('Successfully wrote an index.html'))
+    .catch((err) => console.error(err));
+};
 
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-    // const userPrompt = () => {
-    //     return inquirer.prompt(questions)
-    //   }
-    
-    
-      
-    //   //This function initializes our application and tells the userPrompt function to run first, then takes that data generates a markdown, and writes the README with that information. 
-    //   const init = () => {
-    //   userPrompt()
-    //   .then((fs.writeFile('newTeam.html', data, (error) =>
-    //   error ? console.log('Error!') : console.log('Successful!'))));
-    //   };
-    
-      
-    //   // Function call to initialize app
-    //   init();
-
+// Function call to initialize app
+init();
