@@ -155,9 +155,9 @@ const questions = () => {
     });
   };
     
- //This is where the questions functions ends.
+ 
 
-//Here we create a newTeamObject with teamMembers passed in as data. 
+
 let generateHTMLCard = (newTeamObj) => {
   console.log("team object", newTeamObj);
  
@@ -182,9 +182,9 @@ for(let i = 0; i < newTeamObj.length; i++){
       console.log(finalOption)
   }
 
-//This is setting the new card to an empty string so that we can input data.
- 
 
+ 
+//This is the HTML for a card that we'll put data into.
  let { name, id, email, } = newTeamObj[i]
  console.log(name, id, email, finalOption);
 newCard+=`  
@@ -204,7 +204,7 @@ newCard+=`
 }
 return newCard;
 };
-
+//The layout for our HTML page.
 const generateHTMLPage = (htmlCard) =>
   `<!DOCTYPE html>
   <html lang="en">
