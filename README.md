@@ -40,3 +40,6 @@ None
 
 ### Questions
 If you have any questions or concerns, please e-mail me at sethvance26@gmail.com. More work can be found at my Github. Username -  sethvance26 
+
+GitHub Pages Link >
+https://sethvance26.github.io/Team-Profile-Generator/
