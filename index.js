@@ -2,7 +2,7 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 const jest = require("jest");
-
+const util = require("util");
 //Importing our classes for each role
 
 const Employee = require("../Team-Profile-Generator/lib/Employee");
@@ -13,6 +13,7 @@ const Manager = require("../Team-Profile-Generator/lib/Manager");
 //This is where we have a new object with our team members stored.
 const teamMembers = [];
 
+const writeFileAsync = util.promisify(fs.writeFile);
 
 //These are the questions for the specfic role once it's chosen.
 const engineerQuestion = [
@@ -26,7 +27,7 @@ const engineerQuestion = [
 const internQuestion = [
   {
     type: "input",
-    name: "internSchool",
+    name: "school",
     message: "Please enter intern school name",
   },
 ];
@@ -34,14 +35,39 @@ const internQuestion = [
 const managerQuestion = [
   {
     type: "input",
-    name: "officeNum",
+    name: "office",
     message: "Enter Office Number for Manager",
   },
 ];
+
+
+
+const additionalMem = () => {
+  inquirer.prompt([
+    {
+      type:'confirm',
+      name: 'addMore',
+      message: 'Would you like to add another employee?',
+    },
+  ])
+  .then((userInput) => {
+    if (userInput.addMore === true) {
+      console.log("prompting for another employee");
+      questions();
+  }
+  else {
+    const htmlCard = generateHTMLCard(teamMembers);
+    const htmlPage = generateHTMLPage(htmlCard);
+    writeFileAsync('./dist/index.html', htmlPage);
+}
+  });
+};
+
+
 //Below this we have our base prompt questions. These are asked first.
 //The specific questions above are placed due to scope. 
 const questions = () => {
-  return inquirer
+  inquirer
     .prompt([
       {
         type: "list",
@@ -65,63 +91,82 @@ const questions = () => {
         message: "What is their e-mail address?",
       },
     ])
+
+
 //These below are creating new instantances of constructor classes. 
     .then((data) => {
       if (data.role === "Manager") {
-        return inquirer
+        inquirer
           .prompt(managerQuestion)
 
           .then((data2) => {
             const ManagerGuy = new Manager(
               data.name,
-              data.email,
               data.id,
-              data2.officeNum
+              data.email,
+              data2.office
             );
             teamMembers.push(ManagerGuy);
+            additionalMem();
           });
       }
 //If role is = Intern, then prompt for Intern questions.
-      if (data.role === "Intern") {
-        return inquirer
+     else if (data.role === "Intern") {
+         inquirer
           .prompt(internQuestion)
 
           .then((data2) => {
             const InternGuy = new Intern(
               data.name,
-              data.email,
               data.id,
-              data2.internSchool
+              data.email,
+              data2.school
             );
             teamMembers.push(InternGuy);
+            additionalMem();
           });
       }
 //If role is = Engineer, then prompt for Engineer questions. 
-      if (data.role === "Engineer") {
-        return inquirer
+      else if (data.role === "Engineer") {
+         inquirer
           .prompt(engineerQuestion)
 
           .then((data2) => {
             const EngineerGuy = new Engineer(
               data.name,
-              data.email,
               data.id,
+              data.email,
+              
               data2.github
             );
             teamMembers.push(EngineerGuy);
+            additionalMem();
           });
       }
-          });
+      else {
+        const employee = new Employee(
+          data.name,
+          data.id,
+          data.email,
+          data.role,
+          );
+          teamMembers.push(employee);
       }
+    });
+  };
     
  //This is where the questions functions ends.
 
 //Here we create a newTeamObject with teamMembers passed in as data. 
+let generateHTMLCard = (newTeamObj) => {
+  console.log("team object", newTeamObj);
+ 
+  let newCard = "";
 
-let newTeamObj = (teamMembers)
+
 //This loops through each new team member in our new object
 for(let i = 0; i < newTeamObj.length; i++){
-  let finalPrompt = newTeamObj[i].officeNum || newTeamObj[i].github || newTeamObj[i].internSchool;
+  let finalPrompt = newTeamObj[i].office || newTeamObj[i].github || newTeamObj[i].school;
   let keys = Object.keys(newTeamObj[i]);
   let lastKey = keys[3];
   let finalOption = lastKey + ":" + finalPrompt
@@ -129,84 +174,68 @@ for(let i = 0; i < newTeamObj.length; i++){
   if (lastKey === undefined){
       finalOption = "";
 
-  } else if (lastKey === 'github'){
-      finalOption = (`GitHub : <a href = 'https://www.github.com/${newTeamObj[i].github}'> ${newTeamObj[i].github}</a>`)
+  } else if (lastKey === "github"){
+      finalOption = `GitHub : <a value="Open Window"
+      onclick="window.open('https://www.github.com/${newTeamObj[i].github}')"> ${newTeamObj[i].github}</a>`
       console.log(finalOption)
-  }
-  else{
+  } else{
       console.log(finalOption)
   }
 
 //This is setting the new card to an empty string so that we can input data.
- let newCard = ""
+ 
 
- let {name, id, email, role} = newTeamObj[i]
+ let { name, id, email, } = newTeamObj[i]
+ console.log(name, id, email, finalOption);
 newCard+=`  
-<div class="employee">
-<section class="card">
-  <header>${role}</header>
-  <h2>${name}</h2>
-  <h3>${id}</h3>
-  <img src="./assets/images/camera.jpg" alt="black camera" />
-  <p>${email}</p>
-</section>
-</div>`
+<div class="card" style="width: 18rem;">
+<div class="container">
+  <div style="background-color:rgb(66, 57, 240); color: white;">
+     <h4 class="display-6">${name}</h4>
+     <h4>${newTeamObj[i].constructor.name}</h4>
+   </div> 
+    <ul class="list-group">
+      <li class="list-group-item">ID: ${id}</li>
+      <li class="list-group-item">Email: <a href="mailto:${email}">${email}</a></li>
+      <li class="list-group-item">${finalOption} </li>
+    </ul>
+</div>
+</div>`;
+}
+return newCard;
+};
 
-
-
-const Markup = (newCard) =>
+const generateHTMLPage = (htmlCard) =>
   `<!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css%22%3E">
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <title>Document</title>
   </head>
   <body>
-<main>
-${newCard}
-</main>
+
+${htmlCard}
+
 
   </body>
-  </html>`
+  </html>`;
 
-// Function to write README file
-const writeToFile = (data) => {
-  fs.writeFile("./dist/index.html", Markup(data), (error) =>
-    error ? console.log("Error!") : console.log("Success!")
-  );
+  const writeToFile = (data) => {
+    fs.writeFile("./dist/index.html", data, (error) =>
+      error ? console.log("Error!") : console.log("Success!")
+    );
+  };
 
 
-const additionalMem = () => {
-  inquirer.prompt([
-    {
-      type:'confirm',
-      name: 'addMore',
-      message: 'Would you like to add another employee?',
-    }
-  ])
-  if (response.addMore === true){
-    questions(teamMembers);
-  } else {
-    console.log('team', teamMembers)
-    let newCard = (teamMembers)
-  }
-}
 
 // Function to initialize app
 const init = () => {
-  questions()
-    .then((data) => {
-      console.log(teamMembers);
-      additionalMem()
-      writeToFile("./dist/index.html", Markup(data));
-    })
-    .then(() => console.log("Successfully wrote an index.html"))
-    .catch((err) => console.error(err));
+  questions();
+ 
 };
 
 // Function call to initialize app
 init();
-}}
+
