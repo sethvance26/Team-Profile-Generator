@@ -41,7 +41,7 @@ None
 
 The following image shows a mock-up of the generated HTML’s appearance and functionality:
 
-![HTML webpage titled “My Team” features five boxes listing employee names, titles, and other key info.](./Assets/10-object-oriented-programming-homework-demo.png)
+![exam](https://user-images.githubusercontent.com/76290048/116804978-1d478a00-aaf1-11eb-99ba-d08e8eec01a0.PNG)
 
 ### Sample-Video
 
