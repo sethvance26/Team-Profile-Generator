@@ -45,7 +45,7 @@ The following image shows a mock-up of the generated HTML’s appearance and fun
 
 ### Sample-Video
 
-Here is a link to a video sampling this application's functionality. - https://drive.google.com/file/d/1IzEPpHccNWwn1KbOapUWWLKmq3hpU3l-/view?usp=sharing
+Here is a link to a video sampling this application's functionality. - https://drive.google.com/file/d/1RxfItTj7XiY286wbNjBa9wNl71INePVk/view?usp=sharing
 
 ### Questions
 If you have any questions or concerns, please e-mail me at sethvance26@gmail.com. More work can be found at my Github. Username -  sethvance26 
