@@ -37,6 +37,12 @@ npm i/ npm install
 ##Contributions
 None
 
+### Mock-Up
+
+The following image shows a mock-up of the generated HTML’s appearance and functionality:
+
+![HTML webpage titled “My Team” features five boxes listing employee names, titles, and other key info.](./Assets/10-object-oriented-programming-homework-demo.png)
+
 
 ### Questions
 If you have any questions or concerns, please e-mail me at sethvance26@gmail.com. More work can be found at my Github. Username -  sethvance26 
