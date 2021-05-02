@@ -116,13 +116,14 @@ const questions = () => {
     
  //This is where the questions functions ends.
 
+//Here we create a newTeamObject with teamMembers passed in as data. 
 
 let newTeamObj = (teamMembers)
-
+//This loops through each new team member in our new object
 for(let i = 0; i < newTeamObj.length; i++){
   let finalPrompt = newTeamObj[i].officeNum || newTeamObj[i].github || newTeamObj[i].internSchool;
   let keys = Object.keys(newTeamObj[i]);
-  let lastKey = keys[4];
+  let lastKey = keys[3];
   let finalOption = lastKey + ":" + finalPrompt
 
   if (lastKey === undefined){
@@ -136,7 +137,7 @@ for(let i = 0; i < newTeamObj.length; i++){
       console.log(finalOption)
   }
 
-
+//This is setting the new card to an empty string so that we can input data.
  let newCard = ""
 
  let {name, id, email, role} = newTeamObj[i]
@@ -153,7 +154,7 @@ newCard+=`
 
 
 
-const Markup = (data) =>
+const Markup = (newCard) =>
   `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -208,3 +209,4 @@ const init = () => {
 
 // Function call to initialize app
 init();
+}}

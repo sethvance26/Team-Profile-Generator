@@ -1,1 +1,42 @@
-teamPage.html
+
+
+# License
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  This project is licensed under the MIT license. URL Here - (https://opensource.org/licenses/MIT)
+## Project Name:
+Team Profile Generator
+
+## Table of Contents
+- [Title](#Project-Name)
+- [Description](#Description)
+- [License](#License)
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [Tests](#Tests)
+- [Contributions](#Contributions)
+- [Questions](#Questions)
+
+## Description
+A command line application that uses node and takes in data for new Employee's of a company. It then takes this data, and generates to an HTML page and shows a card for each of the Employees that the User had input. It also uses Jest to test each class/role of Employee.
+
+## Contact
+[Email]-(sethvance26@gmail.com)
+[GitHub]-(sethvance26)
+
+## Tests
+To run a test, use the command npm run test
+
+## Usage
+Here our policy is: If you break it, you buy it.
+https://github.com/sethvance26/Team-Profile-Generator
+
+
+## Installation
+npm i/ npm install
+
+##Contributions
+None
+
+
+### Questions
+If you have any questions or concerns, please e-mail me at sethvance26@gmail.com. More work can be found at my Github. Username -  sethvance26 
